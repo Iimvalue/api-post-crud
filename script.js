@@ -65,7 +65,7 @@ btn.addEventListener("click", () => {
     method: "POST",
     body: JSON.stringify({
       name: userName.value,
-      img: image.value,
+      image: image.value,
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -73,8 +73,8 @@ btn.addEventListener("click", () => {
   })
     .then((response) => response.json())
     .then((data) => {
-        console.log(data);
-        
+      console.log(data);
+
       let card = document.createElement("div");
       let img = document.createElement("img");
       let cardTitle = document.createElement("h5");
