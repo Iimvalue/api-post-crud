@@ -6,23 +6,6 @@ let arrayImage = [
   "https://images.pexels.com/photos/29872205/pexels-photo-29872205/free-photo-of-tranquil-beach-sunset-with-silhouetted-boat.jpeg?auto=compress&cs=tinysrgb&w=1200&lazy=load",
 ];
 
-// arrayImage.forEach(img => {
-//     fetch('https://6821b02c259dad2655b02f16.mockapi.io/todo', {
-//         method: 'POST',
-//         body: JSON.stringify({
-//           title: 'foo',
-//           body: 'bar',
-//           image: img,
-//         }),
-//         headers: {
-//           'Content-type': 'application/json; charset=UTF-8',
-//         },
-//       })
-//         .then((response) => response.json())
-//         .then((json) => console.log(json));
-
-// })
-
 let container = document.getElementById("container");
 
 fetch("https://6821b02c259dad2655b02f16.mockapi.io/todo")
@@ -59,9 +42,54 @@ fetch("https://6821b02c259dad2655b02f16.mockapi.io/todo")
 let userName = document.getElementById("name");
 let image = document.getElementById("image");
 let btn = document.getElementById("submit");
-
+let imgStatus = document.getElementById("status-img");
+let nameAlert = document.getElementById("name-alert");
+let addStatus = document.getElementById("add-status");
 btn.addEventListener("click", () => {
-  fetch("https://jsonplaceholder.typicode.com/posts", {
+  imgStatus.textContent = "";
+  addStatus.textContent = "";
+  nameAlert.textContent = "";
+
+  if (userName.value.length < 6) {
+    nameAlert.textContent = "Name should be more than 5 characters";
+    nameAlert.className = "d-block text-danger";
+    imgStatus.textContent = "";
+    addStatus.textContent = "";
+    console.log(response.status);
+    return;
+  }
+  nameAlert.textContent = "";
+
+  fetch(`${image.value}`).then((response) => {
+    if (response.status != 200) {
+      imgStatus.textContent = "Image URL Invalid";
+      imgStatus.className = "d-block text-danger";
+      addStatus.textContent = "";
+      nameAlert.textContent = "";
+      return;
+    }
+
+    imgStatus.textContent = "Image URL works";
+    imgStatus.className = "text-success";
+
+    addStatus.textContent = "The card succesulfy added";
+    addStatus.className = "text-success";
+  });
+
+  fetch("https://6821b02c259dad2655b02f16.mockapi.io/todo")
+    .then((res) => res.json())
+    .then((data) => {
+      data.map((data) => {
+        if (data.name == userName.value) {
+          addStatus.textContent = "The name duplicated, try to chagne name";
+          addStatus.className = "text-danger";
+          userName.focus;
+          return
+        }
+      });
+    });
+
+  fetch("https://6821b02c259dad2655b02f16.mockapi.io/todo", {
     method: "POST",
     body: JSON.stringify({
       name: userName.value,
@@ -73,8 +101,6 @@ btn.addEventListener("click", () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
-
       let card = document.createElement("div");
       let img = document.createElement("img");
       let cardTitle = document.createElement("h5");
